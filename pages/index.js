@@ -194,7 +194,7 @@ const Guestbook = ({fallback}) => {
             <main className="max-w-4xl mx-auto p-4 m-0 font-sans text-sm">
                 <section className="py-[1.2rem] text-center grid justify-center">
                     <div
-                        className="mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto mb-12 bg-fixed bg-center bg-cover custom-img">
+                        className="mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img">
                         <img className="my-[2rem] max-w-full" src="/static/ursuyluis.jpg"/>
                     </div>
                     <p className="mt-[0.50rem] mb-[1.5rem] text-gray-600 text-sm">{`faltan ${days} dias ${hours} horas ${minutes} minutos`}</p>
@@ -238,9 +238,9 @@ const Guestbook = ({fallback}) => {
                 </section>
                 <div
                     className={cn(
-                        'border border-blue-200 rounded p-6',
-                        'my-4 w-full dark:border-gray-800 bg-blue-50',
-                        'dark:bg-blue-opaque'
+                        'rounded p-6',
+                        'my-4 w-full dark:border-gray-800 bg-green-100',
+                        'dark:bg-green-opaque'
                     )}
                 >
                     <h5 className={cn('text-lg md:text-xl font-bold', 'text-gray-900')}>
@@ -249,7 +249,8 @@ const Guestbook = ({fallback}) => {
                     <p className="my-1 text-gray-800">
                         Por favor responde antes del 10 de enero del 2023, esperamos poder celebrar contigo!
                     </p>
-                    <EntryForm onSubmit={onSubmit}/>
+                    <p>FORMULARIO EN CONSTRUCCION</p>
+                    {/*<EntryForm onSubmit={onSubmit}/>*/}
                 </div>
                 <div className="mt-4 space-y-8 px-2">
                     {entries?.map((entry) => (
