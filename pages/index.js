@@ -185,7 +185,7 @@ const Guestbook = ({fallback}) => {
                 {/*    className="border rounded-md pt-[0.25rem] px-[0.75rem] font-bold self-end bg-green-600 hover:bg-green-900 text-white text-sm">RSVP*/}
                 {/*</button>*/}
                 <h1 className="text-4xl font-highlight">Ursula & Luis</h1>
-                <p className="bg-white relative top-[13px] text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
+                <p className="bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
             </header>
             <main className="max-w-4xl mx-auto p-4 m-0 font-sans text-sm">
                 <section className="py-[2rem] text-center grid justify-center">
