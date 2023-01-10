@@ -179,13 +179,14 @@ const Guestbook = ({fallback}) => {
     return (
         <SWRConfig value={{fallback}}>
             <AppHead/>
-            <header
-                className="border-b-2 flex sticky top-0 mx-[1rem] pt-[1rem] pb-[0.2rem] bg-white items-center justify-center flex-col	">
-                {/*<button*/}
-                {/*    className="border rounded-md pt-[0.25rem] px-[0.75rem] font-bold self-end bg-green-600 hover:bg-green-900 text-white text-sm">RSVP*/}
-                {/*</button>*/}
-                <h1 className="text-4xl font-highlight">Ursula & Luis</h1>
-                <p className="bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
+            <header className="sticky top-0 border-b-[0.70rem] border-white">
+                <div className="border-b-2 flex mx-[1rem] pt-[1rem] pb-[0.2rem] bg-white items-center justify-center flex-col	">
+                    {/*<button*/}
+                    {/*    className="border rounded-md pt-[0.25rem] px-[0.75rem] font-bold self-end bg-green-600 hover:bg-green-900 text-white text-sm">RSVP*/}
+                    {/*</button>*/}
+                    <h1 className="text-4xl font-highlight">Ursula & Luis</h1>
+                    <p className="bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
+                </div>
             </header>
             <main className="max-w-4xl mx-auto p-4 m-0 font-sans text-sm">
                 <section className="py-[2rem] text-center grid justify-center">
