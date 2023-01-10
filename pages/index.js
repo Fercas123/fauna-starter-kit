@@ -185,7 +185,7 @@ const Guestbook = ({fallback}) => {
                 {/*    className="border rounded-md pt-[0.25rem] px-[0.75rem] font-bold self-end bg-green-600 hover:bg-green-900 text-white text-sm">RSVP*/}
                 {/*</button>*/}
                 <h1 className="text-4xl font-highlight">Ursula & Luis</h1>
-                <p className="text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
+                <p className="bg-white relative top-[13px] text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
             </header>
             <main className="max-w-4xl mx-auto p-4 m-0 font-sans text-sm">
                 <section className="py-[2rem] text-center grid justify-center">
@@ -240,9 +240,9 @@ const Guestbook = ({fallback}) => {
                         RSVP
                     </h5>
                     <p className="my-1 text-gray-800">
-                        Por favor responde antes del 15 de marzo del 2023, esperamos poder celebrar contigo!
+                        Por favor confirma tu asistencia antes del 20 de marzo del 2023, esperamos poder celebrar contigo!
                     </p>
-                    <p>Telefono/Whatsapp: 951 576 9893 / 951 Balan</p>
+                    <p>Telefono/Whatsapp: 951 XXX XXXX / 951 XXX XXXX</p>
                     {/*<EntryForm onSubmit={onSubmit}/>*/}
                 </section>
                 {/*<div className="mt-4 space-y-8 px-2">*/}
