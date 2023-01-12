@@ -59,19 +59,6 @@ const AppHead = () => (
     </Head>
 )
 
-const EntryItem = ({entry}) => (
-    <div className="flex flex-col space-y-2">
-        <div className="prose dark:prose-dark w-full">{entry.message}</div>
-        <div className="flex items-center space-x-3">
-            <p className="text-sm text-gray-500">{entry.name}</p>
-            <span className="text-gray-200 dark:text-gray-800">/</span>
-            <p className="text-sm text-gray-400 dark:text-gray-600">
-                {formatDate(new Date(entry.createdAt), "d MMM yyyy 'at' h:mm bb")}
-            </p>
-        </div>
-    </div>
-)
-
 const EntryForm = ({onSubmit: onSubmitProp}) => {
     const initial = {
         name: '',
@@ -243,14 +230,9 @@ const Guestbook = ({fallback}) => {
                     <p className="my-1 text-gray-800">
                         Por favor confirma tu asistencia antes del 20 de marzo del 2023, esperamos poder celebrar contigo!
                     </p>
-                    <p>Telefono/Whatsapp: 951 XXX XXXX / 951 XXX XXXX</p>
+                    <p>Telefono/Whatsapp: 951 649 799</p>
                     {/*<EntryForm onSubmit={onSubmit}/>*/}
                 </section>
-                {/*<div className="mt-4 space-y-8 px-2">*/}
-                {/*    {entries?.map((entry) => (*/}
-                {/*        <EntryItem key={entry._id} entry={entry}/>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
             </main>
             <footer
                 className="text-xs border-t-2 flex sticky bottom-0 mx-[1rem] py-[1rem] bg-white items-center justify-center flex-col"> Ursula
