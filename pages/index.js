@@ -1,14 +1,11 @@
-import Head from 'next/head'
 import {useEffect, useState} from 'react'
 import cn from 'classnames'
-import formatDate from 'date-fns/format'
 import useSWR, {mutate, SWRConfig} from 'swr'
 import 'tailwindcss/tailwind.css'
 import {listGuestbookEntries} from '@/lib/fauna'
-import SuccessMessage from '@/components/SuccessMessage'
-import ErrorMessage from '@/components/ErrorMessage'
-import LoadingSpinner from '@/components/LoadingSpinner'
-
+import AppHead from './head'
+import Counter from './counter'
+import EntryForm from './guestForm'
 const fetcher = (url) => fetch(url).then((res) => res.json())
 
 const putEntry = (payload) =>
@@ -35,133 +32,12 @@ const useEntriesFlow = ({fallback}) => {
     }
 }
 
-const AppHead = () => (
-    <Head>
-        <meta charSet="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.png"/>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Great+Vibes"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Libre+Baskerville"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Khula"
-            rel="stylesheet"
-        /><link
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display"
-            rel="stylesheet"
-        />
-
-    </Head>
-)
-
-const EntryForm = ({onSubmit: onSubmitProp}) => {
-    const initial = {
-        name: '',
-        message: '',
-    }
-    const [values, setValues] = useState(initial)
-    const [formState, setFormState] = useState('initial')
-    const isSubmitting = formState === 'submitting'
-
-    const onSubmit = (ev) => {
-        ev.preventDefault()
-
-        setFormState('submitting')
-        onSubmitProp(values)
-            .then(() => {
-                setValues(initial)
-                setFormState('submitted')
-            })
-            .catch(() => {
-                setFormState('failed')
-            })
-    }
-
-    const makeOnChange =
-        (fieldName) =>
-            ({target: {value}}) =>
-                setValues({
-                    ...values,
-                    [fieldName]: value,
-                })
-
-    const inputClasses = cn(
-        'block py-2 bg-white dark:bg-gray-800',
-        'rounded-md border-gray-300 focus:ring-blue-500',
-        'focus:border-blue-500 text-gray-900 dark:text-gray-100'
-    )
-
-    return (
-        <>
-            <form className="flex relative my-4" onSubmit={onSubmit}>
-                <input
-                    required
-                    className={cn(inputClasses, 'w-1/3 mr-2 px-4')}
-                    aria-label="Your name"
-                    placeholder="Your name..."
-                    value={values.name}
-                    onChange={makeOnChange('name')}
-                />
-                <input
-                    required
-                    className={cn(inputClasses, 'pl-4 pr-32 flex-grow')}
-                    aria-label="Your message"
-                    placeholder="Your message..."
-                    value={values.message}
-                    onChange={makeOnChange('message')}
-                />
-                <button
-                    className={cn(
-                        'flex items-center justify-center',
-                        'absolute right-1 top-1 px-4 font-bold h-8',
-                        'bg-gray-100 dark:bg-gray-700 text-gray-900',
-                        'dark:text-gray-100 rounded w-28'
-                    )}
-                    type="submit"
-                    disabled={isSubmitting}
-                >
-                    {isSubmitting ? <LoadingSpinner/> : 'Sign'}
-                </button>
-            </form>
-            {{
-                failed: () => <ErrorMessage>Something went wrong. :(</ErrorMessage>,
-
-                submitted: () => (
-                    <SuccessMessage>Thanks for signing the guestbook.</SuccessMessage>
-                ),
-            }[formState]?.()}
-        </>
-    )
-}
-
 const Guestbook = ({fallback}) => {
     const {entries, onSubmit} = useEntriesFlow({fallback})
-    const [days, setDays] = useState(0);
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [guest, setGuest] = useState("guest")
+    const [guest, setGuest] = useState("guest");
 
     useEffect(() => {
         setGuest(new URLSearchParams(window.location.search).get('guest'))
-
-        const target = new Date("04/15/2023 15:00:00");
-
-        const interval = setInterval(() => {
-            const now = new Date();
-            const difference = target.getTime() - now.getTime();
-            setDays(Math.floor(difference / (1000 * 60 * 60 * 24)));
-            setHours(Math.floor(
-                (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            ));
-            setMinutes(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)));
-        }, 1000);
-
-        return () => clearInterval(interval);
     }, []);
     return (
         <SWRConfig value={{fallback}}>
@@ -181,8 +57,7 @@ const Guestbook = ({fallback}) => {
                         className="mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img">
                         <img className="my-[2rem] max-w-full" src="/static/ursuyluis.jpg"/>
                     </div>
-                    <p className="mt-[0.50rem] mb-[1.5rem] text-gray-600 text-sm">{`faltan ${days} dias ${hours} horas ${minutes} minutos`}</p>
-
+                    <Counter/>
                     <p>Lo tenemos todo. El traje, el lugar, las flores, el mezcal...</p>
                     <p>Pero nos falta lo básico: ¡Contar contigo en este día tan importante para nosotros!</p>
                     <p>Asi que por favor confirma lo que ya sabemos: ¡Que vienes seguro!</p>
