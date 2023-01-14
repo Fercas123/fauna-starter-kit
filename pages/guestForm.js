@@ -7,7 +7,7 @@ import SuccessMessage from "@/components/SuccessMessage";
 
 const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: todo.name || undefined,
+        name: todo.name,
         phone: todo.phone || undefined,
         confirmedGuests: undefined,
         rsvp: true,
@@ -88,7 +88,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                 </div>
                 <div className="flex flex-col">
                     <label htmlFor="confirmedGuests">Numero de invitados*</label>
-                    <select className={cn(inputClasses, 'mr-2 px-4')} required name="confirmedGuests" id="confirmedGuests" value={values.confirmedGuests} onChange={makeOnChange('confirmedGuests')}>
+                    <select className={cn(inputClasses, 'mr-2 px-4')} required id="confirmedGuests" value={values.confirmedGuests} onChange={makeOnChange('confirmedGuests')}>
                         <option value={undefined}>-Selecciona una opcion-</option>
                         {Array.from({length: todo.guests}, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}
                     </select>
