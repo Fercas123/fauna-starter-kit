@@ -7,12 +7,12 @@ import SuccessMessage from "@/components/SuccessMessage";
 
 const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: todo.name,
-        phone: todo.phone || undefined,
+        name: todo && todo.name,
+        phone: todo && todo.phone || undefined,
         confirmedGuests: undefined,
         rsvp: true,
         attending: true,
-        message: todo.message || undefined
+        message: todo && todo.message || undefined
     }
     const [values, setValues] = useState(initial)
     const [formState, setFormState] = useState('initial')
@@ -22,7 +22,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
         ev.preventDefault()
 
         setFormState('submitting');
-        onSubmitProps({code: todo.code, data: values})
+        onSubmitProps({code: todo && todo.code, data: values})
             .then(() => {
                 setValues(initial)
                 setFormState('submitted')
@@ -47,7 +47,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
         'focus:border-blue-500 text-gray-900 dark:text-gray-100'
     )
 
-    return (todo.rsvp === true
+    return (todo && todo.rsvp === true
             ? <>
                 <h3>Gracias por contestar el formulario!</h3>
                 <p>Si quieres modificar tu asistencia, por favor mandanos un mensaje al numero de Whatsapp</p>
@@ -62,7 +62,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                         className={cn(inputClasses, 'mr-2 px-[1rem]')}
                         aria-label="Codigo de acceso"
                         placeholder="Por favor, por el codigo que viene en tu invitacion"
-                        value={todo.code}
+                        value={todo && todo.code}
                     />
                 </div>
                 <div>
@@ -90,7 +90,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                     <label htmlFor="confirmedGuests">Numero de invitados*</label>
                     <select className={cn(inputClasses, 'mr-2 px-4')} required id="confirmedGuests" value={values.confirmedGuests} onChange={makeOnChange('confirmedGuests')}>
                         <option value={undefined}>-Selecciona una opcion-</option>
-                        {Array.from({length: todo.guests}, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}
+                        {Array.from({length: todo && todo.guests}, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}
                     </select>
                 </div>
                 <div  className="flex flex-col">
