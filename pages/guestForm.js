@@ -7,7 +7,7 @@ import SuccessMessage from "@/components/SuccessMessage";
 
 const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: todo.name,
+        name: todo.name || undefined,
         phone: todo.phone || undefined,
         confirmedGuests: undefined,
         rsvp: true,
