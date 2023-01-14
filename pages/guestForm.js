@@ -5,10 +5,10 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 
-const EntryForm = ({onSubmit: onSubmitProp}) => {
+const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: '',
-        message: '',
+        text: todo.text,
+        completed: todo.completed,
     }
     const [values, setValues] = useState(initial)
     const [formState, setFormState] = useState('initial')
@@ -17,8 +17,8 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
     const onSubmit = (ev) => {
         ev.preventDefault()
 
-        setFormState('submitting')
-        onSubmitProp(values)
+        setFormState('submitting');
+        onSubmitProps({code: todo.code, data: values})
             .then(() => {
                 setValues(initial)
                 setFormState('submitted')
@@ -30,11 +30,12 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
 
     const makeOnChange =
         (fieldName) =>
-            ({target: {value}}) =>
+            ({target: {type, value, checked}}) => {
                 setValues({
                     ...values,
-                    [fieldName]: value,
+                    [fieldName]: type === 'checkbox' ? checked : type === "select-one" ? parseInt(value, 10) : value,
                 })
+            }
 
     const inputClasses = cn(
         'block py-2 bg-white dark:bg-gray-800',
@@ -45,21 +46,28 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
     return (
         <>
             <form className="flex relative my-4" onSubmit={onSubmit}>
+                <label>
+                    Text:
+                </label>
                 <input
                     required
                     className={cn(inputClasses, 'w-1/3 mr-2 px-4')}
                     aria-label="Your name"
                     placeholder="Your name..."
-                    value={values.name}
-                    onChange={makeOnChange('name')}
+                    value={values.text}
+                    onChange={makeOnChange('text')}
                 />
+                <label>
+                    Completed:
+                </label>
                 <input
+                    type="checkbox"
                     required
                     className={cn(inputClasses, 'pl-4 pr-32 flex-grow')}
                     aria-label="Your message"
                     placeholder="Your message..."
-                    value={values.message}
-                    onChange={makeOnChange('message')}
+                    value={values.completed}
+                    onChange={makeOnChange('completed')}
                 />
                 <button
                     className={cn(
@@ -75,10 +83,10 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
                 </button>
             </form>
             {{
-                failed: () => <ErrorMessage>Something went wrong. :(</ErrorMessage>,
+                failed: () => <ErrorMessage>Tuvimos un error. Por favor intenta de nuevo :(</ErrorMessage>,
 
                 submitted: () => (
-                    <SuccessMessage>Thanks for signing the guestbook.</SuccessMessage>
+                    <SuccessMessage>Gracias por mandar tu respuesta.</SuccessMessage>
                 ),
             }[formState]?.()}
         </>

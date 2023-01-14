@@ -1,61 +1,54 @@
-import {useEffect, useState} from 'react'
 import cn from 'classnames'
-import useSWR, {mutate, SWRConfig} from 'swr'
+import {mutate, SWRConfig} from 'swr'
 import 'tailwindcss/tailwind.css'
-import {listGuestbookEntries} from '@/lib/fauna'
+import {getTodo} from '@/lib/fauna'
 import AppHead from './head'
 import Counter from './counter'
 import EntryForm from './guestForm'
-const fetcher = (url) => fetch(url).then((res) => res.json())
 
-const putEntry = (payload) =>
-    fetch('/api/entries', {
-        method: 'POST',
+const putTodo = (payload) =>
+    fetch('/api/todos', {
+        method: 'PUT',
         body: JSON.stringify(payload),
         headers: {
             'Content-Type': 'application/json',
         },
     }).then((res) => (res.ok ? res.json() : Promise.reject(res)))
 
-const useEntriesFlow = ({fallback}) => {
-    const {data: entries} = useSWR('/api/entries', fetcher, {
-        fallbackData: fallback.entries,
-    })
+
+const useTodoFlow = () => {
     const onSubmit = async (payload) => {
-        await putEntry(payload)
-        await mutate('/api/entries')
+        await putTodo(payload)
+        await mutate('/api/todos')
     }
 
     return {
-        entries,
         onSubmit,
     }
 }
 
-const Guestbook = ({fallback}) => {
-    const {entries, onSubmit} = useEntriesFlow({fallback})
-    const [guest, setGuest] = useState("guest");
-
-    useEffect(() => {
-        setGuest(new URLSearchParams(window.location.search).get('guest'))
-    }, []);
+const Guestbook = ({todo}) => {
+    const {onSubmit} = useTodoFlow()
     return (
-        <SWRConfig value={{fallback}}>
+        <SWRConfig value={{todo}}>
             <AppHead/>
             <header className="sticky top-0 border-b-[0.70rem] border-white">
-                <div className="border-b-2 flex mx-[1rem] pt-[1rem] pb-[0.2rem] bg-white items-center justify-center flex-col	">
+                <div>{todo && todo.text}</div>
+                <div
+                    className="border-b-2 flex mx-[1rem] pt-[1rem] pb-[0.2rem] bg-white items-center justify-center flex-col	">
                     {/*<button*/}
                     {/*    className="border rounded-md pt-[0.25rem] px-[0.75rem] font-bold self-end bg-green-600 hover:bg-green-900 text-white text-sm">RSVP*/}
                     {/*</button>*/}
                     <h1 className="text-4xl font-highlight">Ursula & Luis</h1>
-                    <p className="bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700">Nuestra Boda</p>
+                    <p className="bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700">Nuestra
+                        Boda</p>
                 </div>
             </header>
             <main className="max-w-4xl mx-auto p-4 m-0 font-sans text-sm">
                 <section className="py-[2rem] text-center grid justify-center">
                     <div
                         className="mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img">
-                        <img className="my-[2rem] max-w-full" src="/static/ursuyluis.jpg"/>
+                        <img className="my-[2rem] max-w-full" src="/static/ursuyluis.jpg" alt="Foto de los novios"/>
                     </div>
                     <Counter/>
                     <p>Lo tenemos todo. El traje, el lugar, las flores, el mezcal...</p>
@@ -63,7 +56,7 @@ const Guestbook = ({fallback}) => {
                     <p>Asi que por favor confirma lo que ya sabemos: ¡Que vienes seguro!</p>
                     <p className="pt-[3rem]">La ceremonia tendrá lugar el</p>
                     <h2 className="text-lg font-bold">Sabado 15 de Abril 2023 </h2>
-                        <h2 className="text-lg font-bold">en Oaxaca, Mexico</h2>
+                    <h2 className="text-lg font-bold">en Oaxaca, Mexico</h2>
                 </section>
                 <hr className="mx-auto my-[1rem] w-28 transition transition-[width] ease-linear duration-1000	"/>
                 <section className="py-[2rem] text-center flex flex-wrap justify-center gap-[3rem]" id="eventos">
@@ -93,20 +86,23 @@ const Guestbook = ({fallback}) => {
                     <h3 className="font-black text-black text-lg">MESA DE REGALOS</h3>
                     <p>El mejor regalo que nos puedes dar es tu presencia,</p>
                     <p className="pb-[1rem]">pero si quieres obsequiarnos algo puedes hacerlo de dos formas:</p>
-                    <a className="text-base p-[1rem] hover:text-green-700" href="https://www.amazon.com.mx/wedding/share/ushu_y_luis">Amazon </a>
-                    <a className="text-base p-[1rem] hover:text-green-700" href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/50945324">Liverpool </a>
+                    <a className="text-base p-[1rem] hover:text-green-700"
+                       href="https://www.amazon.com.mx/wedding/share/ushu_y_luis">Amazon </a>
+                    <a className="text-base p-[1rem] hover:text-green-700"
+                       href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/50945324">Liverpool </a>
                 </section>
                 <hr className="mx-auto my-[1rem] w-28 transition transition-[width] ease-linear duration-1000	"/>
                 <section className="py-[2rem] text-center" id="rsvp">
 
-                <h5 className={cn('text-lg md:text-xl font-bold', 'text-gray-900')}>
+                    <h5 className={cn('text-lg md:text-xl font-bold', 'text-gray-900')}>
                         RSVP
                     </h5>
                     <p className="my-1 text-gray-800">
-                        Por favor confirma tu asistencia antes del 20 de marzo del 2023, esperamos poder celebrar contigo!
+                        Por favor confirma tu asistencia antes del 20 de marzo del 2023, esperamos poder celebrar
+                        contigo!
                     </p>
                     <p>Telefono/Whatsapp: 951 649 799</p>
-                    {/*<EntryForm onSubmit={onSubmit}/>*/}
+                    {todo && <EntryForm onSubmit={onSubmit} todo={todo}/>}
                 </section>
             </main>
             <footer
@@ -117,15 +113,11 @@ const Guestbook = ({fallback}) => {
     )
 }
 
-export async function getStaticProps() {
-    const entries = await listGuestbookEntries()
-    return {
-        props: {
-            fallback: {
-                entries,
-            },
-        },
-    }
+Guestbook.getInitialProps = async (context) => {
+    const {query: {code}} = context
+    if (!code) return {};
+    const res = await getTodo(code)
+    return {todo: res}
 }
 
 export default Guestbook
