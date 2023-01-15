@@ -5,10 +5,14 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 
-const EntryForm = ({onSubmit: onSubmitProp}) => {
+const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: '',
-        message: '',
+        name: todo && todo.name,
+        phone: todo && todo.phone || undefined,
+        confirmedGuests: undefined,
+        rsvp: true,
+        attending: true,
+        message: todo && todo.message || undefined
     }
     const [values, setValues] = useState(initial)
     const [formState, setFormState] = useState('initial')
@@ -17,8 +21,8 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
     const onSubmit = (ev) => {
         ev.preventDefault()
 
-        setFormState('submitting')
-        onSubmitProp(values)
+        setFormState('submitting');
+        onSubmitProps({code: todo && todo.code, data: values})
             .then(() => {
                 setValues(initial)
                 setFormState('submitted')
@@ -30,11 +34,21 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
 
     const makeOnChange =
         (fieldName) =>
-            ({target: {value}}) =>
+            ({target: {type, value, checked}}) => {
                 setValues({
                     ...values,
-                    [fieldName]: value,
+                    [fieldName]: type === 'checkbox' ? checked : type === "select-one" ? parseInt(value, 10) : value,
                 })
+            }
+
+    const makeDoubleOnChange =
+        () => ({target: {value}}) => {
+            setValues({
+                ...values,
+                'confirmedGuests': parseInt(value, 10),
+                'attending': parseInt(value, 10) > 0,
+            })
+        }
 
     const inputClasses = cn(
         'block py-2 bg-white dark:bg-gray-800',
@@ -42,43 +56,82 @@ const EntryForm = ({onSubmit: onSubmitProp}) => {
         'focus:border-blue-500 text-gray-900 dark:text-gray-100'
     )
 
-    return (
-        <>
-            <form className="flex relative my-4" onSubmit={onSubmit}>
-                <input
-                    required
-                    className={cn(inputClasses, 'w-1/3 mr-2 px-4')}
-                    aria-label="Your name"
-                    placeholder="Your name..."
-                    value={values.name}
-                    onChange={makeOnChange('name')}
-                />
-                <input
-                    required
-                    className={cn(inputClasses, 'pl-4 pr-32 flex-grow')}
-                    aria-label="Your message"
-                    placeholder="Your message..."
-                    value={values.message}
-                    onChange={makeOnChange('message')}
-                />
+    return (<>
+            <form className=" flex flex-col items-end my-4 bg-gray-100 p-4 max-w-[800px] m-auto bg-gray-100" onSubmit={onSubmit}>
+                <div
+                    className="flex flex-wrap gap-[1rem] my-4 p-4 "
+                >
+                    <div className="flex flex-col items-start min-w-[20%]">
+                        <label htmlFor="code">Código de acceso*</label>
+                        <input
+                            required
+                            disabled
+                            className={cn(inputClasses, 'mr-2 px-[1rem] className="w-full"')}
+                            aria-label="Código de acceso"
+                            placeholder="Por favor, por el código que viene en tu invitacion"
+                            value={todo && todo.code}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start min-w-[44%]">
+                        <label htmlFor="name">Nombre/Nombres*</label>
+                        <input
+                            required
+                            className={cn(inputClasses, 'mr-2 px-4 w-full')}
+                            aria-label="Nombre"
+                            placeholder="Nombre / Nombres"
+                            value={values.name}
+                            onChange={makeOnChange('name')}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start min-w-[23%]">
+                        <label htmlFor="phone">Teléfono</label>
+                        <input
+                            className={cn(inputClasses, 'mr-2 px-4 w-full')}
+                            aria-label="phone"
+                            placeholder="Teléfono."
+                            value={values.phone}
+                            onChange={makeOnChange('phone')}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start min-w-[20%]">
+                        <label htmlFor="confirmedGuests">Número de asistentes*</label>
+                        <select className={cn(inputClasses, 'mr-2 px-[0.4rem] w-full')} required id="confirmedGuests"
+                                value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
+                            <option value={undefined} disabled selected>Selecciona una opción</option>
+                            <option value={0}>No voy a ir</option>
+                            {Array.from({length: todo && todo.guests}, (_, index) => <option key={index}
+                                                                                             value={index + 1}>{index + 1}</option>)}
+                        </select>
+                    </div>
+                    <div className="flex flex-col items-start min-w-[73%]">
+                        <label htmlFor="message">Si deseas, puedes agregar un mensaje.</label>
+                        <input
+                            className={cn(inputClasses, 'pl-4 pr-32 flex-grow w-full')}
+                            aria-label="Mensaje"
+                            placeholder="Your message..."
+                            value={values.message}
+                            onChange={makeOnChange('message')}
+                        />
+                    </div>
+                </div>
                 <button
                     className={cn(
                         'flex items-center justify-center',
-                        'absolute right-1 top-1 px-4 font-bold h-8',
+                        'px-4 font-bold h-8',
                         'bg-gray-100 dark:bg-gray-700 text-gray-900',
-                        'dark:text-gray-100 rounded w-28'
+                        'dark:text-gray-100 rounded w-28 mr-3'
                     )}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || values.confirmedGuests === undefined}
                 >
-                    {isSubmitting ? <LoadingSpinner/> : 'Sign'}
+                    {isSubmitting ? <LoadingSpinner/> : 'RSVP'}
                 </button>
             </form>
             {{
-                failed: () => <ErrorMessage>Something went wrong. :(</ErrorMessage>,
+                failed: () => <ErrorMessage>Tuvimos un error. Por favor intenta de nuevo :(</ErrorMessage>,
 
                 submitted: () => (
-                    <SuccessMessage>Thanks for signing the guestbook.</SuccessMessage>
+                    <SuccessMessage>Gracias por mandar tu respuesta.</SuccessMessage>
                 ),
             }[formState]?.()}
         </>
