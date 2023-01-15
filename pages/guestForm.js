@@ -46,7 +46,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
             setValues({
                 ...values,
                 'confirmedGuests': parseInt(value, 10),
-                'attending': parseInt(value, 10) > 0 ? true : false,
+                'attending': parseInt(value, 10) > 0,
             })
         }
 
@@ -97,7 +97,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                         <label htmlFor="confirmedGuests">Numero de asistentes*</label>
                         <select className={cn(inputClasses, 'mr-2 px-[0.4rem] w-full')} required id="confirmedGuests"
                                 value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
-                            <option value={undefined}>Selecciona una opcion</option>
+                            <option value={undefined} disabled selected>Selecciona una opcion</option>
                             <option value={0}>No voy a ir</option>
                             {Array.from({length: todo && todo.guests}, (_, index) => <option key={index}
                                                                                              value={index + 1}>{index + 1}</option>)}
@@ -122,9 +122,9 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                         'dark:text-gray-100 rounded w-28 mr-3'
                     )}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || values.confirmedGuests === undefined}
                 >
-                    {isSubmitting ? <LoadingSpinner/> : 'Sign'}
+                    {isSubmitting ? <LoadingSpinner/> : 'RSVP'}
                 </button>
             </form>
             {{

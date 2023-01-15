@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import {mutate, SWRConfig} from 'swr'
+import useSWR, {mutate, SWRConfig} from 'swr'
 import 'tailwindcss/tailwind.css'
 import {getTodo} from '@/lib/fauna'
 import AppHead from './head'
@@ -15,22 +15,28 @@ const putTodo = (payload) =>
         },
     }).then((res) => (res.ok ? res.json() : Promise.reject(res)))
 
+const fetchWithCode = (code) => fetch('/api/todos', {
+    body: JSON.stringify({code: code}),
+}).then((r) => r.json());
 
-const useTodoFlow = () => {
+const useTodoFlow = ({fallback, code}) => {
+    const {data: todo} = useSWR(code, fetchWithCode, {fallbackData: fallback})
     const onSubmit = async (payload) => {
         await putTodo(payload)
         await mutate('/api/todos')
     }
 
     return {
+        todo,
         onSubmit,
     }
 }
 
-const Guestbook = ({todo}) => {
-    const {onSubmit} = useTodoFlow()
+const Guestbook = ({fallback, code}) => {
+    const {todo, onSubmit} = useTodoFlow({fallback, code});
+
     return (
-        <SWRConfig value={{todo, fetchPolicy: 'cache-and-network', revalidateOnFocus: false}}>
+        <SWRConfig value={{fallback}}>
             <AppHead/>
             <header className="sticky top-0 border-b-[0.70rem] border-white">
                 <div>{todo && todo.text}</div>
@@ -122,7 +128,7 @@ Guestbook.getInitialProps = async (context) => {
     const {query: {code}} = context
     if (!code) return {};
     const res = await getTodo(code)
-    return {todo: res}
+    return {fallback: res, code}
 }
 
 export default Guestbook
