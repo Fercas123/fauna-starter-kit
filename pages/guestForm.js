@@ -41,87 +41,85 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                 })
             }
 
+    const makeDoubleOnChange =
+        () => ({target: {value}}) => {
+            setValues({
+                ...values,
+                'confirmedGuests': parseInt(value, 10),
+                'attending': parseInt(value, 10) > 0 ? true : false,
+            })
+        }
+
     const inputClasses = cn(
         'block py-2 bg-white dark:bg-gray-800',
         'rounded-md border-gray-300 focus:ring-blue-500',
         'focus:border-blue-500 text-gray-900 dark:text-gray-100'
     )
 
-    return (todo && todo.rsvp === true
-            ? <>
-                <h3>Gracias por contestar el formulario!</h3>
-                <p>Si quieres modificar tu asistencia, por favor mandanos un mensaje al numero de Whatsapp</p>
-            </>
-            : <>
-            <form className="flex flex-wrap gap-[1rem] my-4" onSubmit={onSubmit}>
-                <div>
-                    <label htmlFor="code">Codigo de acceso*</label>
-                    <input
-                        required
-                        disabled
-                        className={cn(inputClasses, 'mr-2 px-[1rem]')}
-                        aria-label="Codigo de acceso"
-                        placeholder="Por favor, por el codigo que viene en tu invitacion"
-                        value={todo && todo.code}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="name">Nombre/Nombres*</label>
-                    <input
-                        required
-                        className={cn(inputClasses, 'mr-2 px-4')}
-                        aria-label="Nombre"
-                        placeholder="Nombre / Nombres"
-                        value={values.name}
-                        onChange={makeOnChange('name')}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="phone">Por favor danos un numero en caso de que tengamos que contactarte</label>
-                    <input
-                        className={cn(inputClasses, 'mr-2 px-4')}
-                        aria-label="phone"
-                        placeholder="Telefono."
-                        value={values.phone}
-                        onChange={makeOnChange('phone')}
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <label htmlFor="confirmedGuests">Numero de invitados*</label>
-                    <select className={cn(inputClasses, 'mr-2 px-4')} required id="confirmedGuests" value={values.confirmedGuests} onChange={makeOnChange('confirmedGuests')}>
-                        <option value={undefined}>-Selecciona una opcion-</option>
-                        {Array.from({length: todo && todo.guests}, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}
-                    </select>
-                </div>
-                <div  className="flex flex-col">
-
-                    <label htmlFor="attending">RSVP*</label>
-                    <div>
+    return (<>
+            <form className=" flex flex-col items-end my-4 bg-gray-100 p-4 max-w-[800px] m-auto bg-gray-100" onSubmit={onSubmit}>
+                <div
+                    className="flex flex-wrap gap-[1rem] my-4 p-4 "
+                >
+                    <div className="flex flex-col items-start min-w-[20%]">
+                        <label htmlFor="code">Codigo de acceso*</label>
                         <input
-                            type="checkbox"
-                            id="attending"
-                            onChange={makeOnChange('attending')}
-                            className={cn(inputClasses, 'w-1/3 mr-2 px-4')}
-                        /> <label>Si, voy a estar ahi!</label>
+                            required
+                            disabled
+                            className={cn(inputClasses, 'mr-2 px-[1rem] className="w-full"')}
+                            aria-label="Codigo de acceso"
+                            placeholder="Por favor, por el codigo que viene en tu invitacion"
+                            value={todo && todo.code}
+                        />
                     </div>
-
-                </div>
-                <div>
-                    <label htmlFor="message">Si deseas, puedes agregar un mensaje.</label>
-                    <input
-                        className={cn(inputClasses, 'pl-4 pr-32 flex-grow')}
-                        aria-label="Mensaje"
-                        placeholder="Your message..."
-                        value={values.message}
-                        onChange={makeOnChange('message')}
-                    />
+                    <div className="flex flex-col items-start min-w-[44%]">
+                        <label htmlFor="name">Nombre/Nombres*</label>
+                        <input
+                            required
+                            className={cn(inputClasses, 'mr-2 px-4 w-full')}
+                            aria-label="Nombre"
+                            placeholder="Nombre / Nombres"
+                            value={values.name}
+                            onChange={makeOnChange('name')}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start min-w-[23%]">
+                        <label htmlFor="phone">Telefono</label>
+                        <input
+                            className={cn(inputClasses, 'mr-2 px-4 w-full')}
+                            aria-label="phone"
+                            placeholder="Telefono."
+                            value={values.phone}
+                            onChange={makeOnChange('phone')}
+                        />
+                    </div>
+                    <div className="flex flex-col items-start min-w-[20%]">
+                        <label htmlFor="confirmedGuests">Numero de asistentes*</label>
+                        <select className={cn(inputClasses, 'mr-2 px-[0.4rem] w-full')} required id="confirmedGuests"
+                                value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
+                            <option value={undefined}>Selecciona una opcion</option>
+                            <option value={0}>No voy a ir</option>
+                            {Array.from({length: todo && todo.guests}, (_, index) => <option key={index}
+                                                                                             value={index + 1}>{index + 1}</option>)}
+                        </select>
+                    </div>
+                    <div className="flex flex-col items-start min-w-[73%]">
+                        <label htmlFor="message">Si deseas, puedes agregar un mensaje.</label>
+                        <input
+                            className={cn(inputClasses, 'pl-4 pr-32 flex-grow w-full')}
+                            aria-label="Mensaje"
+                            placeholder="Your message..."
+                            value={values.message}
+                            onChange={makeOnChange('message')}
+                        />
+                    </div>
                 </div>
                 <button
                     className={cn(
                         'flex items-center justify-center',
                         'px-4 font-bold h-8',
                         'bg-gray-100 dark:bg-gray-700 text-gray-900',
-                        'dark:text-gray-100 rounded w-28'
+                        'dark:text-gray-100 rounded w-28 mr-3'
                     )}
                     type="submit"
                     disabled={isSubmitting}

@@ -30,7 +30,7 @@ const useTodoFlow = () => {
 const Guestbook = ({todo}) => {
     const {onSubmit} = useTodoFlow()
     return (
-        <SWRConfig value={{todo}}>
+        <SWRConfig value={{todo, fetchPolicy: 'cache-and-network', revalidateOnFocus: false}}>
             <AppHead/>
             <header className="sticky top-0 border-b-[0.70rem] border-white">
                 <div>{todo && todo.text}</div>
@@ -97,12 +97,17 @@ const Guestbook = ({todo}) => {
                     <h5 className={cn('text-lg md:text-xl font-bold', 'text-gray-900')}>
                         RSVP
                     </h5>
-                    <p className="my-1 text-gray-800">
+                    {(!todo || todo.rsvp !== true) ? <p className="my-1 text-gray-800">
                         Por favor confirma tu asistencia antes del 20 de marzo del 2023, esperamos poder celebrar
                         contigo!
-                    </p>
-                    <p>Telefono/Whatsapp: 951 649 799</p>
-                    {todo && <EntryForm onSubmit={onSubmit} todo={todo}/>}
+                    </p> : <>
+                        <h3 className="text-gray-600 pb-[1rem]">GRACIAS POR MANDAR TU RESPUESTA!</h3>
+                        <p>{`Respondiste que ${todo.attending === true ? 'si' : 'no'} vas a ir.`}</p>
+                        <p>Si quieres modificar tu asistencia, por favor mandanos un mensaje al numero de Whatsapp</p>
+                    </>
+                    }
+                    {(todo && todo.rsvp !== true) && <EntryForm onSubmit={onSubmit} todo={todo}/>}
+                    <p className="text-gray-600 pb-[1rem]">TELEFONO/WHATSAPP: 951 649 799</p>
                 </section>
             </main>
             <footer
