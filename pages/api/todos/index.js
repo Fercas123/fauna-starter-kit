@@ -1,10 +1,15 @@
-import { getTodo, updateTodo} from '@/lib/fauna'
+import { getTodo, getTodos, updateTodo} from '@/lib/fauna'
 
 export default async function handler(req, res) {
   const handlers = {
     GET: async () => {
-      const todo = await getTodo(req.code)
-      res.json(todo)
+      if (req.code) {
+        const todo = await getTodo(req.code)
+        res.json(todo)
+      } else {
+        const todos = await getTodos()
+        res.json(todos)
+      }
     },
 
     PUT: async () => {
