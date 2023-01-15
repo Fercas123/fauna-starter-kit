@@ -13,7 +13,7 @@ export default function Document() {
                     rel="stylesheet"
                 />
                 <link
-                    href="https://fonts.googleapis.com/css2?family=Khula"
+                    href="https://fonts.googleapis.com/css2?family=Abel"
                     rel="stylesheet"
                 /><link
                 href="https://fonts.googleapis.com/css2?family=Playfair+Display"

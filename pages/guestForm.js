@@ -62,13 +62,13 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                     className="flex flex-wrap gap-[1rem] my-4 p-4 "
                 >
                     <div className="flex flex-col items-start min-w-[20%]">
-                        <label htmlFor="code">Codigo de acceso*</label>
+                        <label htmlFor="code">Código de acceso*</label>
                         <input
                             required
                             disabled
                             className={cn(inputClasses, 'mr-2 px-[1rem] className="w-full"')}
-                            aria-label="Codigo de acceso"
-                            placeholder="Por favor, por el codigo que viene en tu invitacion"
+                            aria-label="Código de acceso"
+                            placeholder="Por favor, por el código que viene en tu invitacion"
                             value={todo && todo.code}
                         />
                     </div>
@@ -84,20 +84,20 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[23%]">
-                        <label htmlFor="phone">Telefono</label>
+                        <label htmlFor="phone">Teléfono</label>
                         <input
                             className={cn(inputClasses, 'mr-2 px-4 w-full')}
                             aria-label="phone"
-                            placeholder="Telefono."
+                            placeholder="Teléfono."
                             value={values.phone}
                             onChange={makeOnChange('phone')}
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[20%]">
-                        <label htmlFor="confirmedGuests">Numero de asistentes*</label>
+                        <label htmlFor="confirmedGuests">Número de asistentes*</label>
                         <select className={cn(inputClasses, 'mr-2 px-[0.4rem] w-full')} required id="confirmedGuests"
                                 value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
-                            <option value={undefined} disabled selected>Selecciona una opcion</option>
+                            <option value={undefined} disabled selected>Selecciona una opción</option>
                             <option value={0}>No voy a ir</option>
                             {Array.from({length: todo && todo.guests}, (_, index) => <option key={index}
                                                                                              value={index + 1}>{index + 1}</option>)}

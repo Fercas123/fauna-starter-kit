@@ -17,7 +17,7 @@ module.exports = {
       }
     },
     fontFamily: {
-      sans: ['Khula', 'sans-serif'],
+      sans: ['Abel', 'sans-serif'],
       highlight: ['Playfair Display', 'serif'],
     },
   },

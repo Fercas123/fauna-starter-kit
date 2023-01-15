@@ -61,8 +61,8 @@ const Guestbook = ({fallback, code}) => {
                     <p>Pero nos falta lo básico: ¡Contar contigo en este día tan importante para nosotros!</p>
                     <p>Asi que por favor confirma lo que ya sabemos: ¡Que vienes seguro!</p>
                     <p className="pt-[3rem]">La ceremonia tendrá lugar el</p>
-                    <h2 className="text-lg font-bold">Sabado 15 de Abril 2023 </h2>
-                    <h2 className="text-lg font-bold">en Oaxaca, Mexico</h2>
+                    <h2 className="text-lg font-bold">Sábado 15 de abril 2023 </h2>
+                    <h2 className="text-lg font-bold">en Oaxaca, México</h2>
                 </section>
                 <hr className="mx-auto my-[1rem] w-28 transition transition-[width] ease-linear duration-1000	"/>
                 <section className="py-[2rem] text-center flex flex-wrap justify-center gap-[3rem]" id="eventos">
@@ -73,7 +73,7 @@ const Guestbook = ({fallback, code}) => {
                         <a href="https://goo.gl/maps/hp35YxexwTVbkx859" className="hover:text-black text-xs">
                             <p>Miguel Hidalgo 211, </p>
                             <p>Barrio de Jalatlaco</p>
-                            <p>68080 Oaxaca de Juárez, Oax., Mexico</p>
+                            <p>68080 Oaxaca de Juárez, Oax., México</p>
                         </a>
                     </div>
                     <div className="text-gray-600 m-[0.2rem]">
@@ -83,7 +83,7 @@ const Guestbook = ({fallback, code}) => {
                         <a href="https://goo.gl/maps/hp35YxexwTVbkx859" className="hover:text-black  text-xs">
                             <p>Av 16 de Septiembre Núm 22, </p>
                             <p>Agencia Municipal Sta Maria Ixcotel</p>
-                            <p> 71229 Santa Lucía del Camino, Oax., Mexico</p>
+                            <p> 71229 Santa Lucía del Camino, Oax., México</p>
                         </a>
                     </div>
                 </section>
@@ -109,16 +109,16 @@ const Guestbook = ({fallback, code}) => {
                     </p> : <>
                         <h3 className="text-gray-600 pb-[1rem]">GRACIAS POR MANDAR TU RESPUESTA!</h3>
                         <p>{`Respondiste que ${todo.attending === true ? 'si' : 'no'} vas a ir.`}</p>
-                        <p>Si quieres modificar tu asistencia, por favor mandanos un mensaje al numero de Whatsapp</p>
+                        <p>Si quieres modificar tu asistencia, por favor mandanos un mensaje al número de WhatsApp</p>
                     </>
                     }
                     {(todo && todo.rsvp !== true) && <EntryForm onSubmit={onSubmit} todo={todo}/>}
-                    <p className="text-gray-600 pb-[1rem]">TELEFONO/WHATSAPP: 951 649 799</p>
+                    <p className="text-gray-600 pb-[1rem]">TELÉFONO/WHATSAPP: 951 649 799</p>
                 </section>
             </main>
             <footer
                 className="text-xs border-t-2 flex sticky bottom-0 mx-[1rem] py-[1rem] bg-white items-center justify-center flex-col"> Ursula
-                & Luis | Abril 2023
+                & Luis | abril 2023
             </footer>
         </SWRConfig>
     )
