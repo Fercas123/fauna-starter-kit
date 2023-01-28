@@ -26,14 +26,14 @@ const TodosPage = () => {
             </thead>
             <tbody>
             {todos.data.map((todo, index) => (
-                <tr key={todo.id} className="bg-gray-100 border-b">
+                <tr key={todo.id} className={`${todo.rsvp && todo.attending ? todo.attending ? 'bg-green-100' : 'bg-red-100' : 'bg-gray-100'} border-b`}>
                     <td>{index + 1}</td>
                     <td>{todo.code}</td>
                     <td>{todo.name}</td>
                     <td>{todo.guests}</td>
                     <td>{todo.confirmedGuests}</td>
-                    <td>{todo.rsvp ? 'Claro que yes' : 'No han dicho'}</td>
-                    <td>{todo.rsvp && todo.attending ? todo.attending ? 'Claro que yes' : 'No' : 'Tal vez'}</td>
+                    <td>{todo.rsvp ? '✅' : '❔'}</td>
+                    <td>{todo.rsvp && todo.attending ? todo.attending ? '✅' : '❌' : '❔'}</td>
                     <td>{todo.message}</td>
                 </tr>
             ))}
