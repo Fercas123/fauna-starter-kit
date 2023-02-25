@@ -92,10 +92,17 @@ const Guestbook = ({fallback, code}) => {
                     <h3 className="font-black text-black text-lg">MESA DE REGALOS</h3>
                     <p>El mejor regalo que nos puedes dar es tu presencia,</p>
                     <p className="pb-[1rem]">pero si quieres obsequiarnos algo puedes hacerlo de dos formas:</p>
-                    <a className="text-base p-[1rem] hover:text-green-700"
-                       href="https://www.amazon.com.mx/wedding/share/ushu_y_luis">Amazon </a>
-                    <a className="text-base p-[1rem] hover:text-green-700"
-                       href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/50945324">Liverpool </a>
+                    <a className="p-[1rem]" href="https://www.amazon.com.mx/wedding/share/ushu_y_luis">
+                        <button
+                            className=" rounded-md text-base p-[0.5rem]  self-end bg-gray-100 hover:bg-gray-400">Amazon
+                        </button>
+                    </a>
+                    <a className="p-[1rem]"
+                       href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/50945324">
+                        <button
+                            className=" rounded-md text-base p-[0.5rem]  self-end bg-gray-100 hover:bg-gray-400">Liverpool
+                        </button>
+                         </a>
                 </section>
                 <hr className="mx-auto my-[1rem] w-28 transition transition-[width] ease-linear duration-1000	"/>
                 <section className="py-[2rem] text-center" id="rsvp">
