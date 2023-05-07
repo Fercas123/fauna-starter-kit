@@ -6,7 +6,7 @@ import Counter from './counter'
 import EntryForm from './guestForm'
 import {format} from "date-fns";
 import localeEs from 'date-fns/locale/es';
-import {constants, styles} from '../constants';
+import {constants} from '../constants';
 
 const {
     date,
@@ -22,6 +22,21 @@ const {
     giftRegistry
 } = constants;
 
+export const styles = {
+    header: "sticky top-0 border-b-[0.70rem] border-white",
+    headerLine: 'border-b-2 flex mx-[1rem] pt-[1rem] pb-[0.2rem] bg-white items-center justify-center flex-col',
+    headerNames: 'text-4xl font-highlight',
+    headerEvent: 'bg-white relative top-[13px] rounded-md text-xs px-[1rem] hover:text-green-700',
+    main: 'max-w-4xl mx-auto p-4 m-0 font-sans text-sm',
+    section: 'py-[2rem] text-center grid justify-center',
+    events: "py-[2rem] text-center flex flex-wrap justify-center gap-[3rem]",
+    button: " rounded-md text-base p-[0.5rem]  self-end bg-gray-100 hover:bg-gray-400",
+    imageContainer: 'mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img',
+    image: 'my-[2rem] max-w-full',
+    imageFooter: 'mt-[0.50rem] mb-[1.5rem] text-gray-600 text-sm',
+    footer: "text-xs border-t-2 flex sticky bottom-0 mx-[1rem] py-[1rem] bg-white items-center justify-center flex-col capitalize",
+    separator: "mx-auto my-[1rem] w-28 transition transition-[width] ease-linear duration-1000"
+}
 const putTodo = (payload) =>
     fetch('/api/todos', {
         method: 'PUT',
