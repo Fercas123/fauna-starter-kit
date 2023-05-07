@@ -2,11 +2,10 @@ import {useEffect, useState} from 'react'
 import {formatDuration, intervalToDuration} from 'date-fns'
 import 'tailwindcss/tailwind.css'
 
-const Counter = () => {
-    const [timeLeft, setTimeLeft] = useState("faltan...");
+const Counter = ({target}) => {
+    const [timeLeft, setTimeLeft] = useState("Faltan...");
     const counterClasses = "mt-[0.50rem] mb-[1.5rem] text-gray-600 text-sm";
     useEffect(() => {
-        const target = new Date("04/15/2023 15:00:00 UTC-06:00");
         const formatDistanceLocale = {
             xSeconds: '{{count}} Segundos',
             xMinutes: '{{count}} Minutos',
@@ -26,7 +25,6 @@ const Counter = () => {
             const counter = (formatDuration(duration, {
                 delimiter: ', ', locale: shortEnLocale
             }))
-
             setTimeLeft(counter);
         }, 1000);
 
