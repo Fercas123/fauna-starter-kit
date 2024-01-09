@@ -1,7 +1,7 @@
 // CONSTANTS
 import {isAfter} from "date-fns";
 
-const date = new Date("04/15/2023 15:00:00 UTC-06:00");
+const date = new Date("12/12/2024 15:00:00 UTC-06:00");
 //
 const now = new Date(); // Do not change
 const married = isAfter(date, now); // Do not change
@@ -9,7 +9,7 @@ const married = isAfter(date, now); // Do not change
 const bride = 'Novia';
 const groom = 'Novio';
 const header = 'Nuestra Boda';
-const place = 'Estado, México';
+const place = 'Estado, Pais';
 const contactNumber = '951 XXX XXX';
 const replyBefore = new Date("03/20/2023 15:00:00 UTC-06:00");
 const introParagraphs = married
@@ -18,27 +18,27 @@ const introParagraphs = married
 const events = [
     {
         eventName: 'BODA RELIGIOSA',
-        place: 'TEMPLO SAN MATÍAS JALATLACO',
+        place: 'TEMPLO XXXX',
         time: 'X:00XX – X:00XX',
         address: {
-            link: 'https://goo.gl/maps/hp35YxexwTVbkx859',
+            link: 'https://goo.gl/maps/',
             addessLines: [
-                'Miguel Hidalgo 211,',
-                'Barrio de Jalatlaco',
-                '68080 Oaxaca de Juárez, Oax., México'
+                'address line 1',
+                'address line 2',
+                'address line 3'
             ]
         }
     },
     {
         eventName: 'BODA CIVIL Y FIESTA',
-        place: 'SALON DIONYSUS',
-        time: '7:00PM – 1:00AM',
+        place: 'SALON XXXXX',
+        time: 'X:00PM – X:00AM',
         address: {
-            link: 'https://goo.gl/maps/hp35YxexwTVbkx859',
+            link: 'https://goo.gl/maps/',
             addessLines: [
-                'Av 16 de Septiembre Núm 22,',
-                'Agencia Municipal Sta Maria Ixcotel',
-                '71229 Santa Lucía del Camino, Oax., México'
+                'address line 1',
+                'address line 2',
+                'address line 3'
             ]
         }
     }
@@ -49,11 +49,11 @@ const giftRegistry = {
     registries: [
         {
             name: 'Amazon',
-            link: 'https://www.amazon.com.mx/wedding/share/ushu_y_luis'
+            link: 'https://www.amazon.com.mx/wedding/'
         },
         {
             name: 'Liverpool',
-            link: 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/50945324'
+            link: 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/'
         }
     ]
 };

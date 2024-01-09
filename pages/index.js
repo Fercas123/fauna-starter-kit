@@ -31,7 +31,7 @@ export const styles = {
     section: 'py-[2rem] text-center grid justify-center',
     events: "py-[2rem] text-center flex flex-wrap justify-center gap-[3rem]",
     button: " rounded-md text-base p-[0.5rem]  self-end bg-gray-100 hover:bg-gray-400",
-    imageContainer: 'mb-0 max-h-[30vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img',
+    imageContainer: 'mb-0 max-h-[45vh] max-w-full overflow-hidden container flex items-center justify-center h-screen m-auto bg-fixed bg-center bg-cover custom-img',
     image: 'my-[2rem] max-w-full',
     imageFooter: 'mt-[0.50rem] mb-[1.5rem] text-gray-600 text-sm',
     footer: "text-xs border-t-2 flex sticky bottom-0 mx-[1rem] py-[1rem] bg-white items-center justify-center flex-col capitalize",
@@ -78,12 +78,14 @@ const Guestbook = ({fallback, code}) => {
                     <div className={styles.imageContainer}>
                         <img className={styles.image} src="/static/image.jpg" alt={`${bride} & ${groom}`}/>
                     </div>
+                    <p className={styles.imageFooter}>Photo by <a href="https://unsplash.com/@kseegars?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Kadarius Seegars</a> on <a href="https://unsplash.com/photos/man-kissing-womans-forehead-dTOJSI_xE6w?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+                    </p>
                     {married
                         ? < Counter target={date}/>
                         : <p className={styles.imageFooter}>Gracias por acompañarnos!</p>}
                     {introParagraphs.map((i, index) => <p key={index}>{i}</p>)}
                     <p className="pt-[3rem]">La ceremonia tendrá lugar el</p>
-                    <h2 className="text-lg font-bold">Sábado 15 de abril 2023 </h2>
+                    <h2 className="text-lg font-bold">Sábado XX de XXXX 202? </h2>
                     <h2 className="text-lg font-bold">{`en ${place}`}</h2>
                 </section>
                 <hr className={styles.separator}/>
