@@ -5,14 +5,14 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 
-const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
+const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
     const initial = {
-        name: todo && todo.name,
-        phone: todo && todo.phone || undefined,
+        name: invite && invite.name,
+        phone: invite && invite.phone || undefined,
         confirmedGuests: undefined,
         rsvp: true,
         attending: true,
-        message: todo && todo.message || undefined
+        message: invite && invite.message || undefined
     }
     const [values, setValues] = useState(initial)
     const [formState, setFormState] = useState('initial')
@@ -22,7 +22,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
         ev.preventDefault()
 
         setFormState('submitting');
-        onSubmitProps({code: todo && todo.code, data: values})
+        onSubmitProps({code: invite && invite.code, data: values})
             .then(() => {
                 setValues(initial)
                 setFormState('submitted')
@@ -69,7 +69,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                             className={cn(inputClasses, 'mr-2 px-[1rem] className="w-full"')}
                             aria-label="Código de acceso"
                             placeholder="Por favor, por el código que viene en tu invitacion"
-                            value={todo && todo.code}
+                            value={invite && invite.code}
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[44%]">
@@ -99,7 +99,7 @@ const EntryForm = ({todo, onSubmit: onSubmitProps}) => {
                                 value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
                             <option value={undefined} disabled selected>Selecciona una opción</option>
                             <option value={0}>No voy a ir</option>
-                            {Array.from({length: todo && todo.guests}, (_, index) => <option key={index}
+                            {Array.from({length: invite && invite.guests}, (_, index) => <option key={index}
                                                                                              value={index + 1}>{index + 1}</option>)}
                         </select>
                     </div>

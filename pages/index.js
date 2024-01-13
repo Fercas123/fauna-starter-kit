@@ -1,6 +1,6 @@
 import useSWR, {mutate, SWRConfig} from 'swr'
 import 'tailwindcss/tailwind.css'
-import {getTodo} from '@/lib/fauna'
+import {getInvite} from '@/lib/fauna'
 import AppHead from '@/components/head'
 import Counter from './counter'
 import EntryForm from './guestForm'
@@ -145,7 +145,7 @@ const Guestbook = ({fallback, code}) => {
 Guestbook.getInitialProps = async (context) => {
     const {query: {code}} = context
     if (!code) return {};
-    const res = await getTodo(code)
+    const res = await getInvite(code)
     return {fallback: res, code}
 }
 
