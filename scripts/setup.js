@@ -7,10 +7,10 @@ const { Client, query: Q } = require('faunadb')
 const streamToPromise = require('stream-to-promise')
 const { resolveDbDomain } = require('../lib/constants')
 
-const MakeLatestEntriesIndex = () =>
+const MakeInvitesIndex = () =>
     Q.CreateIndex({
-        name: 'latestEntries',
-        source: Q.Collection('GuestbookEntry'),
+        name: 'invites',
+        source: Q.Collection('Invite'),
         values: [
             {
                 field: ['data', 'createdAt'],
@@ -22,15 +22,15 @@ const MakeLatestEntriesIndex = () =>
         ],
     })
 
-const MakeListLatestEntriesUdf = () =>
-    Q.Update(Q.Function('listLatestEntries'), {
+const MakeListInvitesUdf = () =>
+    Q.Update(Q.Function('listInvites'), {
         // https://docs.fauna.com/fauna/current/api/graphql/functions?lang=javascript#paginated
         body: Q.Query(
             Q.Lambda(
                 ['size', 'after', 'before'],
                 Q.Let(
                     {
-                        match: Q.Match(Q.Index('latestEntries')),
+                        match: Q.Match(Q.Index('invites')),
                         page: Q.If(
                             Q.Equals(Q.Var('before'), null),
                             Q.If(
@@ -55,12 +55,12 @@ const MakeListLatestEntriesUdf = () =>
         ),
     })
 
-const MakeGuestbookRole = () =>
+const MakeGuestRole = () =>
     Q.CreateRole({
-        name: 'GuestbookRole',
+        name: 'GuestRole',
         privileges: [
             {
-                resource: Q.Collection('GuestbookEntry'),
+                resource: Q.Collection('Invite'),
                 actions: {
                     read: true,
                     write: true,
@@ -68,13 +68,13 @@ const MakeGuestbookRole = () =>
                 },
             },
             {
-                resource: Q.Index('latestEntries'),
+                resource: Q.Index('invites'),
                 actions: {
                     read: true,
                 },
             },
             {
-                resource: Q.Function('listLatestEntries'),
+                resource: Q.Function('listInvites'),
                 actions: {
                     call: true,
                 },
@@ -84,11 +84,11 @@ const MakeGuestbookRole = () =>
 
 const MakeGuestbookKey = () =>
     Q.CreateKey({
-        role: Q.Role('GuestbookRole'),
+        role: Q.Role('GuestRole'),
     })
 
 const isDatabasePrepared = ({ client }) =>
-    client.query(Q.Exists(Q.Index('latestEntries')))
+    client.query(Q.Exists(Q.Index('invites')))
 
 const resolveAdminKey = () => {
     if (process.env.FAUNA_ADMIN_KEY) {
@@ -166,9 +166,9 @@ const main = async () => {
     console.log('- Successfully imported schema')
 
     for (const Make of [
-        MakeLatestEntriesIndex,
-        MakeListLatestEntriesUdf,
-        MakeGuestbookRole,
+        MakeInvitesIndex,
+        MakeListInvitesUdf,
+        MakeGuestRole,
     ]) {
         await client.query(Make())
     }
