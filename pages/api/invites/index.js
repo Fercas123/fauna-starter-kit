@@ -1,16 +1,28 @@
-import { getInvite, updateInvite} from '@/lib/fauna'
+import { getInvite, getInvites, updateInvite, createInvite} from '@/lib/fauna'
 
 export default async function handler(req, res) {
     const handlers = {
         GET: async () => {
-            const invite = await getInvite(req.code)
-            res.json(invite)
+            if (req.code) {
+                const invite = await getInvite(req.code)
+                res.json(invite)
+            } else {
+                const invites = await getInvites()
+                res.json(invites)
+            }
         },
 
         PUT: async () => {
             const { code, data } = req.body
+            if (code) {
             const updated = await updateInvite(code, data)
             res.json(updated)
+            } else {
+                console.log('here', data)
+                const created = await createInvite(data)
+                res.json(created)
+
+            }
         }
     }
 

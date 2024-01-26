@@ -5,7 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 
-const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
+const EntryForm = ({invite, onSubmit: onSubmitProp}) => {
     const initial = {
         name: invite && invite.name,
         phone: invite && invite.phone || undefined,
@@ -22,7 +22,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
         ev.preventDefault()
 
         setFormState('submitting');
-        onSubmitProps({code: invite && invite.code, data: values})
+        onSubmitProp({code: invite && invite.code, data: values})
             .then(() => {
                 setValues(initial)
                 setFormState('submitted')
@@ -32,7 +32,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
             })
     }
 
-    const makeOnChange =
+    const updateField =
         (fieldName) =>
             ({target: {type, value, checked}}) => {
                 setValues({
@@ -41,7 +41,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
                 })
             }
 
-    const makeDoubleOnChange =
+    const updateAttendance =
         () => ({target: {value}}) => {
             setValues({
                 ...values,
@@ -80,7 +80,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
                             aria-label="Nombre"
                             placeholder="Nombre / Nombres"
                             value={values.name}
-                            onChange={makeOnChange('name')}
+                            onChange={updateField('name')}
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[23%]">
@@ -90,14 +90,14 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
                             aria-label="phone"
                             placeholder="Teléfono."
                             value={values.phone}
-                            onChange={makeOnChange('phone')}
+                            onChange={updateField('phone')}
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[20%]">
                         <label htmlFor="confirmedGuests">Número de asistentes*</label>
                         <select className={cn(inputClasses, 'mr-2 px-[0.4rem] w-full')} required id="confirmedGuests"
-                                value={values.confirmedGuests} onChange={makeDoubleOnChange()}>
-                            <option value={undefined} disabled selected>Selecciona una opción</option>
+                                value={values.confirmedGuests} onChange={updateAttendance()} defaultValue='Selecciona una opción'>
+                            <option value={undefined} disabled>Selecciona una opción</option>
                             <option value={0}>No voy a ir</option>
                             {Array.from({length: invite && invite.guests}, (_, index) => <option key={index}
                                                                                              value={index + 1}>{index + 1}</option>)}
@@ -110,7 +110,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProps}) => {
                             aria-label="Mensaje"
                             placeholder="Your message..."
                             value={values.message}
-                            onChange={makeOnChange('message')}
+                            onChange={updateField('message')}
                         />
                     </div>
                 </div>
