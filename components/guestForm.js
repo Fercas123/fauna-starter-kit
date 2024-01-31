@@ -1,3 +1,4 @@
+"use client"
 import {useState} from 'react'
 import 'tailwindcss/tailwind.css'
 import cn from "classnames";
@@ -5,7 +6,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 
-const EntryForm = ({invite, onSubmit: onSubmitProp}) => {
+const GuestForm = ({invite}) => {
     const initial = {
         name: invite && invite.name,
         phone: invite && invite.phone || undefined,
@@ -83,6 +84,7 @@ const EntryForm = ({invite, onSubmit: onSubmitProp}) => {
                             onChange={updateField('name')}
                         />
                     </div>
+                    {/* TODO: is this something necessary to ask for? */}
                     <div className="flex flex-col items-start min-w-[23%]">
                         <label htmlFor="phone">Teléfono</label>
                         <input
@@ -137,4 +139,4 @@ const EntryForm = ({invite, onSubmit: onSubmitProp}) => {
         </>
     )
 }
-export default EntryForm
+export default GuestForm

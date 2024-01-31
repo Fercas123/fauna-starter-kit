@@ -1,3 +1,4 @@
+"use client"
 import {useEffect, useState} from 'react'
 import {formatDuration, intervalToDuration} from 'date-fns'
 import 'tailwindcss/tailwind.css'
@@ -30,7 +31,7 @@ const Counter = ({target}) => {
 
         return () => clearInterval(interval);
     }, []);
-    return <p className={counterClasses}>{timeLeft}</p>
+    return <p className={counterClasses}>{'timeLeft'}</p>
 
 }
 

@@ -3,10 +3,10 @@ import 'tailwindcss/tailwind.css'
 import {getInvite} from '@/lib/fauna'
 import AppHead from '@/components/head'
 import Counter from '@/components/counter'
-import EntryForm from '@/components/guestForm'
+import GuestForm from '@/components/guestForm'
 import {format} from "date-fns";
 import localeEs from 'date-fns/locale/es';
-import {constants} from '../constants';
+import {constants} from '../public/static/constants';
 
 const {
     date,
@@ -66,12 +66,6 @@ const InviteCard = ({fallback, code}) => {
     return (
         <SWRConfig value={{fallback}}>
             <AppHead/>
-            <header className={styles.header}>
-                <div className={styles.headerLine}>
-                    <h1 className={styles.headerNames}>{`${bride} & ${groom}`}</h1>
-                    <p className={styles.headerEvent}>{header}</p>
-                </div>
-            </header>
             <main className={styles.main}>
                 <section className={styles.section}>
                     <div className={styles.imageContainer}>
@@ -130,13 +124,10 @@ const InviteCard = ({fallback, code}) => {
                                 WhatsApp</p>
                         </>
                     }
-                    {(invite && invite.rsvp !== true) && <EntryForm onSubmit={onSubmit} invite={invite}/>}
+                    {(invite && invite.rsvp !== true) && <GuestForm onSubmit={onSubmit} invite={invite}/>}
                     <p className="text-gray-600 pb-[1rem]">{`TELÉFONO / WHATSAPP: ${contactNumber}`}</p>
                 </section>
             </main>
-            <footer className={styles.footer}>
-                {`${bride} & ${groom} | ${format(date, 'MMMM yyyy', {locale: localeEs})}`}
-            </footer>
         </SWRConfig>
     )
 }

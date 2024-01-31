@@ -1,12 +1,10 @@
-import useSWR, {mutate, SWRConfig} from 'swr'
-import AppHead from "@/components/head";
-import {styles} from "./index";
-import {constants} from "../constants";
+"use client"
 import cn from "classnames";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 import {useState} from "react";
+import {createInvite} from "@/lib/fauna";
 
 const putInvite = (payload) =>
     fetch('/api/invites', {
@@ -26,7 +24,7 @@ const useNewCardFlow = () => {
     return {submitForm}
 }
 
-const NewInvite = ({fallback}) => {
+const NewForm = ({fallback}) => {
     const {submitForm} = useNewCardFlow();
 
     const initial = {
@@ -73,13 +71,7 @@ const NewInvite = ({fallback}) => {
     )
     return (
         <>
-            <header className={styles.header}>
-                <div className={styles.headerLine}>
-                    <h1 className={styles.headerNames}>{`${constants.bride} & ${constants.groom}`}</h1>
-                    <p className={styles.headerEvent}>Crear invitacion</p>
-                </div>
-            </header>
-            <form className=" flex flex-col items-end my-4 bg-gray-100 p-4 max-w-[800px] m-auto bg-gray-100" onSubmit={onSubmit}>
+            <form className=" flex flex-col items-end my-4 bg-gray-100 p-4 max-w-[800px] m-auto bg-gray-100" action={putInvite}>
                 <div
                     className="flex flex-wrap gap-[1rem] my-4 p-4 "
                 >
@@ -139,4 +131,4 @@ const NewInvite = ({fallback}) => {
         </>
     )
 }
-export default NewInvite
+export default NewForm

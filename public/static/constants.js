@@ -1,5 +1,6 @@
 // CONSTANTS
 import {isAfter} from "date-fns";
+import localeEs from "date-fns/locale/es";
 
 const date = new Date("12/12/2024 15:00:00 UTC-06:00");
 //
@@ -10,6 +11,11 @@ const bride = 'Novia';
 const groom = 'Novio';
 const header = 'Nuestra Boda';
 const place = 'Estado, Pais';
+const image = {
+    src: 'image.jpg',
+    credits: <>Photo by <a href="https://unsplash.com/@kseegars?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Kadarius Seegars</a> on <a href="https://unsplash.com/photos/man-kissing-womans-forehead-dTOJSI_xE6w?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a></>,
+    footer: 'Gracias por acompañarnos!'
+};
 const contactNumber = '951 XXX XXX';
 const replyBefore = new Date("03/20/2023 15:00:00 UTC-06:00");
 const introParagraphs = married
@@ -65,6 +71,8 @@ export const constants = {
     groom,
     header,
     place,
+    image,
+    locale: localeEs,
     contactNumber,
     replyBefore,
     introParagraphs,
