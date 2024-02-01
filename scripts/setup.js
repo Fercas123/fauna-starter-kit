@@ -1,193 +1,189 @@
 // This script sets up the database to be used for this example application.
 // Look at the code to see what is behind the magic
-const fs = require('fs')
-const readline = require('readline')
-const request = require('request')
-const { Client, query: Q } = require('faunadb')
-const streamToPromise = require('stream-to-promise')
-const { resolveDbDomain } = require('../lib/constants')
+const fs = require('fs');
+const readline = require('readline');
+const request = require('request');
+const { Client, query: Q } = require('faunadb');
+const streamToPromise = require('stream-to-promise');
+const { resolveDbDomain } = require('../lib/constants');
 
 const MakeInvitesIndex = () =>
-    Q.CreateIndex({
-        name: 'invites',
-        source: Q.Collection('Invite'),
-        values: [
-            {
-                field: ['data', 'createdAt'],
-                reverse: true,
-            },
-            {
-                field: 'ref',
-            },
-        ],
-    })
+  Q.CreateIndex({
+    name: 'invites',
+    source: Q.Collection('Invite'),
+    values: [
+      {
+        field: ['data', 'createdAt'],
+        reverse: true,
+      },
+      {
+        field: 'ref',
+      },
+    ],
+  });
 
 const MakeListInvitesUdf = () =>
-    Q.Update(Q.Function('listInvites'), {
-        // https://docs.fauna.com/fauna/current/api/graphql/functions?lang=javascript#paginated
-        body: Q.Query(
-            Q.Lambda(
-                ['size', 'after', 'before'],
-                Q.Let(
-                    {
-                        match: Q.Match(Q.Index('invites')),
-                        page: Q.If(
-                            Q.Equals(Q.Var('before'), null),
-                            Q.If(
-                                Q.Equals(Q.Var('after'), null),
-                                Q.Paginate(Q.Var('match'), {
-                                    size: Q.Var('size'),
-                                }),
-                                Q.Paginate(Q.Var('match'), {
-                                    size: Q.Var('size'),
-                                    after: Q.Var('after'),
-                                })
-                            ),
-                            Q.Paginate(Q.Var('match'), {
-                                size: Q.Var('size'),
-                                before: Q.Var('before'),
-                            })
-                        ),
-                    },
-                    Q.Map(Q.Var('page'), Q.Lambda(['_', 'ref'], Q.Get(Q.Var('ref'))))
-                )
-            )
-        ),
-    })
+  Q.Update(Q.Function('listInvites'), {
+    // https://docs.fauna.com/fauna/current/api/graphql/functions?lang=javascript#paginated
+    body: Q.Query(
+      Q.Lambda(
+        ['size', 'after', 'before'],
+        Q.Let(
+          {
+            match: Q.Match(Q.Index('invites')),
+            page: Q.If(
+              Q.Equals(Q.Var('before'), null),
+              Q.If(
+                Q.Equals(Q.Var('after'), null),
+                Q.Paginate(Q.Var('match'), {
+                  size: Q.Var('size'),
+                }),
+                Q.Paginate(Q.Var('match'), {
+                  size: Q.Var('size'),
+                  after: Q.Var('after'),
+                })
+              ),
+              Q.Paginate(Q.Var('match'), {
+                size: Q.Var('size'),
+                before: Q.Var('before'),
+              })
+            ),
+          },
+          Q.Map(Q.Var('page'), Q.Lambda(['_', 'ref'], Q.Get(Q.Var('ref'))))
+        )
+      )
+    ),
+  });
 
 const MakeGuestRole = () =>
-    Q.CreateRole({
-        name: 'GuestRole',
-        privileges: [
-            {
-                resource: Q.Collection('Invite'),
-                actions: {
-                    read: true,
-                    write: true,
-                    create: true,
-                },
-            },
-            {
-                resource: Q.Index('invites'),
-                actions: {
-                    read: true,
-                },
-            },
-            {
-                resource: Q.Function('listInvites'),
-                actions: {
-                    call: true,
-                },
-            },
-        ],
-    })
+  Q.CreateRole({
+    name: 'GuestRole',
+    privileges: [
+      {
+        resource: Q.Collection('Invite'),
+        actions: {
+          read: true,
+          write: true,
+          create: true,
+        },
+      },
+      {
+        resource: Q.Index('invites'),
+        actions: {
+          read: true,
+        },
+      },
+      {
+        resource: Q.Function('listInvites'),
+        actions: {
+          call: true,
+        },
+      },
+    ],
+  });
 
 const MakeGuestbookKey = () =>
-    Q.CreateKey({
-        role: Q.Role('GuestRole'),
-    })
+  Q.CreateKey({
+    role: Q.Role('GuestRole'),
+  });
 
 const isDatabasePrepared = ({ client }) =>
-    client.query(Q.Exists(Q.Index('invites')))
+  client.query(Q.Exists(Q.Index('invites')));
 
 const resolveAdminKey = () => {
-    if (process.env.FAUNA_ADMIN_KEY) {
-        return Promise.resolve(process.env.FAUNA_ADMIN_KEY)
-    }
+  if (process.env.FAUNA_ADMIN_KEY) {
+    return Promise.resolve(process.env.FAUNA_ADMIN_KEY);
+  }
 
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    })
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 
-    return new Promise((resolve, reject) => {
-        rl.question('Please provide the Fauna admin key:\n', (res) => {
-            rl.close()
+  return new Promise((resolve, reject) => {
+    rl.question('Please provide the Fauna admin key:\n', (res) => {
+      rl.close();
 
-            if (!res) {
-                return reject(
-                    new Error('You need to provide a key, closing. Try again')
-                )
-            }
+      if (!res) {
+        return reject(
+          new Error('You need to provide a key, closing. Try again')
+        );
+      }
 
-            resolve(res)
-        })
-    })
-}
+      resolve(res);
+    });
+  });
+};
 
 const importSchema = (adminKey) => {
-    let domain = resolveDbDomain().replace('db', 'graphql')
-    return streamToPromise(
-        fs.createReadStream('./schema.gql').pipe(
-            request.post({
-                model: 'merge',
-                uri: `https://${domain}/import`,
-                headers: {
-                    Authorization: `Bearer ${adminKey}`,
-                },
-            })
-        )
-    ).then(String)
-}
+  let domain = resolveDbDomain().replace('db', 'graphql');
+  return streamToPromise(
+    fs.createReadStream('./schema.gql').pipe(
+      request.post({
+        model: 'merge',
+        uri: `https://${domain}/import`,
+        headers: {
+          Authorization: `Bearer ${adminKey}`,
+        },
+      })
+    )
+  ).then(String);
+};
 
 const findImportError = (msg) => {
-    switch (true) {
-        case msg.startsWith('Invalid database secret'):
-            return 'The secret you have provided is not valid, closing. Try again'
-        case !msg.includes('success'):
-            return msg
-        default:
-            return null
-    }
-}
+  switch (true) {
+    case msg.startsWith('Invalid database secret'):
+      return 'The secret you have provided is not valid, closing. Try again';
+    case !msg.includes('success'):
+      return msg;
+    default:
+      return null;
+  }
+};
 
 const main = async () => {
-    const adminKey = await resolveAdminKey()
+  const adminKey = await resolveAdminKey();
 
-    const client = new Client({
-        secret: adminKey,
-        domain: resolveDbDomain(),
-    })
+  const client = new Client({
+    secret: adminKey,
+    domain: resolveDbDomain(),
+  });
 
-    if (await isDatabasePrepared({ client })) {
-        return console.info(
-            'Fauna resources have already been prepared. ' +
-            'If you want to install it once again, please, create a fresh database and re-run the script with the other key'
-        )
-    }
+  if (await isDatabasePrepared({ client })) {
+    return console.info(
+      'Fauna resources have already been prepared. ' +
+        'If you want to install it once again, please, create a fresh database and re-run the script with the other key'
+    );
+  }
 
-    const importMsg = await importSchema(adminKey)
-    const importErrorMsg = findImportError(importMsg)
+  const importMsg = await importSchema(adminKey);
+  const importErrorMsg = findImportError(importMsg);
 
-    if (importErrorMsg) {
-        return Promise.reject(new Error(importErrorMsg))
-    }
+  if (importErrorMsg) {
+    return Promise.reject(new Error(importErrorMsg));
+  }
 
-    console.log('- Successfully imported schema')
+  console.log('- Successfully imported schema');
 
-    for (const Make of [
-        MakeInvitesIndex,
-        MakeListInvitesUdf,
-        MakeGuestRole,
-    ]) {
-        await client.query(Make())
-    }
+  for (const Make of [MakeInvitesIndex, MakeListInvitesUdf, MakeGuestRole]) {
+    await client.query(Make());
+  }
 
-    console.log('- Created Fauna resources')
+  console.log('- Created Fauna resources');
 
-    if (process.env.FAUNA_ADMIN_KEY) {
-        // Assume it's a Vercel environment, no need for .env.local file
-        return
-    }
+  if (process.env.FAUNA_ADMIN_KEY) {
+    // Assume it's a Vercel environment, no need for .env.local file
+    return;
+  }
 
-    const { secret } = await client.query(MakeGuestbookKey())
+  const { secret } = await client.query(MakeGuestbookKey());
 
-    await fs.promises.writeFile('.env.local', `FAUNA_CLIENT_SECRET=${secret}\n`)
+  await fs.promises.writeFile('.env.local', `FAUNA_CLIENT_SECRET=${secret}\n`);
 
-    console.log('- Created .env.local file with secret')
-}
+  console.log('- Created .env.local file with secret');
+};
 
 main().catch((err) => {
-    console.error(err)
-    process.exit(1)
-})
+  console.error(err);
+  process.exit(1);
+});

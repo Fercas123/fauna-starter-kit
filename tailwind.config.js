@@ -13,8 +13,8 @@ module.exports = {
         '0.75rem': '0.75rem',
       },
       transitionProperty: {
-        'height': 'height',
-      }
+        height: 'height',
+      },
     },
     fontFamily: {
       sans: ['Abel', 'sans-serif'],
@@ -22,4 +22,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};
