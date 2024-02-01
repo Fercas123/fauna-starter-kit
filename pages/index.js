@@ -5,7 +5,7 @@ import AppHead from '@/components/head'
 import Counter from '@/components/counter'
 import EntryForm from '@/components/guestForm'
 import {format} from "date-fns";
-import localeEs from 'date-fns/locale/es';
+import localeEs from 'date-fns/locale/es/index';
 import {constants} from '../constants';
 
 const {
