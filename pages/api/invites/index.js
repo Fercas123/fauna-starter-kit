@@ -18,7 +18,6 @@ export default async function handler(req, res) {
             const updated = await updateInvite(code, data)
             res.json(updated)
             } else {
-                console.log('here', data)
                 const created = await createInvite(data)
                 res.json(created)
 

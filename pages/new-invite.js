@@ -39,32 +39,34 @@ const NewInvite = ({fallback}) => {
         attending: false,
         message: undefined
     }
-    const [values, setValues] = useState(initial)
     const [formState, setFormState] = useState('initial')
     const isSubmitting = formState === 'submitting'
     const onSubmit = (ev) => {
-        console.log('submitting')
         ev.preventDefault();
-        console.log(values)
         setFormState('submitting');
-        submitForm({data: values})
+        const formData = new FormData(ev.target);
+
+        const payload = {
+            code: undefined,
+            name: undefined,
+            guests: 0,
+            phone: undefined,
+            confirmedGuests: 0,
+            rsvp: false,
+            attending: false,
+            message: undefined
+        }
+        formData.forEach((value, key) => {
+            payload[key] = key === 'guests' ? parseInt(value, 10) : value;
+        });
+        submitForm({data: payload})
             .then(() => {
-                setValues(initial)
                 setFormState('submitted')
             })
             .catch(() => {
                 setFormState('failed')
             })
     }
-    const updateField =
-        (fieldName) =>
-            ({target: {type, value, checked}}) => {
-                setValues({
-                    ...values,
-                    [fieldName]: type === 'checkbox' ? checked : type === "number" ? parseInt(value, 10) : value,
-                })
-            }
-
 
     const inputClasses = cn(
         'block py-2 bg-white dark:bg-gray-800',
@@ -73,12 +75,6 @@ const NewInvite = ({fallback}) => {
     )
     return (
         <>
-            <header className={styles.header}>
-                <div className={styles.headerLine}>
-                    <h1 className={styles.headerNames}>{`${constants.bride} & ${constants.groom}`}</h1>
-                    <p className={styles.headerEvent}>Crear invitacion</p>
-                </div>
-            </header>
             <form className=" flex flex-col items-end my-4 bg-gray-100 p-4 max-w-[800px] m-auto bg-gray-100" onSubmit={onSubmit}>
                 <div
                     className="flex flex-wrap gap-[1rem] my-4 p-4 "
@@ -89,8 +85,7 @@ const NewInvite = ({fallback}) => {
                             required
                             className={cn(inputClasses, 'mr-2 px-[1rem] className="w-full"')}
                             aria-label="Código de acceso"
-                            value={values.code}
-                            onChange={updateField('code')}
+                            name='code'
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[44%]">
@@ -100,8 +95,7 @@ const NewInvite = ({fallback}) => {
                             className={cn(inputClasses, 'mr-2 px-4 w-full')}
                             aria-label="Nombre"
                             placeholder="Nombre / Nombres"
-                            value={values.name}
-                            onChange={updateField('name')}
+                            name='name'
                         />
                     </div>
                     <div className="flex flex-col items-start min-w-[20%]">
@@ -110,8 +104,7 @@ const NewInvite = ({fallback}) => {
                             type='number'
                             required
                             aria-label="Asistentes"
-                            value={values.guests}
-                            onChange={updateField('guests')}
+                            name='guests'
 
                         />
                     </div>

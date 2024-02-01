@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import 'tailwindcss/tailwind.css';
 import {styles} from './index';
 import {constants} from '../constants';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import Link from 'next/link';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -11,7 +11,7 @@ const compareNames = (a, b) => a.name.toUpperCase().localeCompare(b.name.toUpper
 const compareCodes = (a, b) => a.code - b.code;
 
 const GuestsPage = () => {
-    const {data: invites, mutate: mutateInvites} = useSWR('/api/invites', fetcher);
+    const { data: invites } = useSWR('/api/invites', fetcher);
 
     const [invitesList, setInvitesList] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
@@ -33,11 +33,9 @@ const GuestsPage = () => {
         } else {
             setOrderAscending(!orderAscending);
         }
-
-        return mutateInvites(); // Trigger a re-fetch
     };
 
-    const sortInvites = () => {
+    const sortedAndFilteredInvites = useMemo(() => {
         const compareFunction = orderBy === 'index' ? compareCodes : compareNames;
         const sortedList = orderAscending ? [...invitesList].sort(compareFunction) : [...invitesList].sort(compareFunction).reverse();
 
@@ -50,22 +48,10 @@ const GuestsPage = () => {
         }
 
         return sortedList;
-    };
-
-    if (!invites) {
-        return <div>Loading...</div>;
-    }
+    }, [invitesList, orderAscending, orderBy, rsvpFilter, attendingFilter]);
 
     return (
         <>
-            <header className={styles.header}>
-                <div className={styles.headerLine}>
-                    <Link href={'/'}>
-                        <h1 className={styles.headerNames}>{`${constants.bride} & ${constants.groom}`}</h1>
-                    </Link>
-                    <p className={styles.headerEvent}>Lista de invitados</p>
-                </div>
-            </header>
             <main className={styles.main}>
                 <div>
                     <button onClick={() => setShowFilters(!showFilters)}>
@@ -74,10 +60,10 @@ const GuestsPage = () => {
                     {showFilters && (
                         <div>
                             <label>
-                                <input type="checkbox" onChange={() => setRsvpFilter(!rsvpFilter)}/> RSVP Received
+                                <input type="checkbox" onChange={() => setRsvpFilter(!rsvpFilter)} checked={rsvpFilter}/> RSVP Received
                             </label>
                             <label>
-                                <input type="checkbox" onChange={() => setAttendingFilter(!attendingFilter)}/> Attending
+                                <input type="checkbox" onChange={() => setAttendingFilter(!attendingFilter)} checked={attendingFilter}/> Attending
                             </label>
                         </div>
                     )}
@@ -99,7 +85,7 @@ const GuestsPage = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {sortInvites().map((invite, index) => (
+                    {sortedAndFilteredInvites.map((invite, index) => (
                         <tr
                             key={invite.id}
                             className={`${invite.rsvp && invite.attending ? invite.attending ? 'bg-green-100' : 'bg-red-100' : 'bg-gray-100'} border-b`}
